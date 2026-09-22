@@ -10,17 +10,23 @@ public class PlayerEXP : MonoBehaviour
 
     public Slider expBar;
     public TMP_Text levelText;
+    public GameObject upgradePanel;
 
     void Start()
     {
+        Time.timeScale = 1f;
+
         UpdateUI();
+
+        if (upgradePanel != null)
+        {
+            upgradePanel.SetActive(false);
+        }
     }
 
     public void AddEXP(int amount)
     {
         currentEXP += amount;
-
-        Debug.Log("EXP: " + currentEXP + " / " + requiredEXP);
 
         if (currentEXP >= requiredEXP)
         {
@@ -37,7 +43,28 @@ public class PlayerEXP : MonoBehaviour
         currentEXP = 0;
         requiredEXP += 5;
 
-        Debug.Log("LEVEL UP! Level: " + level);
+        Debug.Log("LEVEL UP! Level " + level);
+
+        UpdateUI();
+
+        // หยุดเกม
+        Time.timeScale = 0f;
+
+        // เปิด Upgrade Panel
+        if (upgradePanel != null)
+        {
+            upgradePanel.SetActive(true);
+        }
+    }
+
+    public void ContinueGame()
+    {
+        Time.timeScale = 1f;
+
+        if (upgradePanel != null)
+        {
+            upgradePanel.SetActive(false);
+        }
     }
 
     void UpdateUI()

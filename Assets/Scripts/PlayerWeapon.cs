@@ -8,6 +8,7 @@ public class PlayerWeapon : MonoBehaviour
     public float attackRange = 10f;
 
     private float attackTimer = 0f;
+    public int damageBonus = 0;
 
     void Update()
     {
@@ -62,7 +63,9 @@ public class PlayerWeapon : MonoBehaviour
 
         if (energyOrb != null)
         {
+            energyOrb.damage += damageBonus;
             energyOrb.SetTarget(target);
         }
     }
+
 }

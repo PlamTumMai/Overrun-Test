@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EnemyCrawler : MonoBehaviour
 {
+    public int enemyLevel = 1;
     public float moveSpeed = 2f;
 
     public int maxHP = 20;
