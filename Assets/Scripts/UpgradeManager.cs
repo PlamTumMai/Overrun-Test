@@ -16,18 +16,16 @@ public class UpgradeManager : MonoBehaviour
         Debug.Log("Upgrade: DAMAGE +10");
     }
 
-    public void UpgradeAttackSpeed()
+    public void UpgradeProjectile()
     {
-        playerWeapon.attackCooldown -= 0.2f;
-
-        if (playerWeapon.attackCooldown < 0.2f)
-        {
-            playerWeapon.attackCooldown = 0.2f;
-        }
+        playerWeapon.projectileCount += 1;
 
         ContinueGame();
 
-        Debug.Log("Upgrade: ATTACK SPEED");
+        Debug.Log(
+            "Upgrade: PROJECTILE +1 | Current: "
+            + playerWeapon.projectileCount
+        );
     }
 
     public void UpgradeMoveSpeed()
@@ -36,7 +34,7 @@ public class UpgradeManager : MonoBehaviour
 
         ContinueGame();
 
-        Debug.Log("Upgrade: MOVE SPEED");
+        Debug.Log("Upgrade: MOVE SPEED +1");
     }
 
     void ContinueGame()

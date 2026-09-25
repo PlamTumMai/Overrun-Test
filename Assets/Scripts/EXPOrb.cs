@@ -4,18 +4,40 @@ public class EXPOrb : MonoBehaviour
 {
     public int expValue = 1;
 
+    // EXP ใหญ่หรือไม่
+    public bool isBigEXP = false;
+
+    // EXP จะอยู่บนพื้นกี่วินาที
+    public float lifeTime = 10f;
+
+    void Start()
+    {
+        // ถ้าไม่เก็บภายในเวลาที่กำหนด EXP จะหาย
+        Destroy(gameObject, lifeTime);
+
+        // ขนาด EXP
+        if (isBigEXP)
+        {
+            transform.localScale = Vector3.one * 0.5f;
+        }
+        else
+        {
+            transform.localScale = Vector3.one * 0.3f;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("EXP touched: " + collision.gameObject.name);
-
         if (collision.CompareTag("Player"))
         {
-            PlayerEXP playerEXP = collision.GetComponent<PlayerEXP>();
+            PlayerEXP playerEXP =
+                collision.GetComponent<PlayerEXP>();
 
             if (playerEXP != null)
             {
                 playerEXP.AddEXP(expValue);
-                Debug.Log("EXP COLLECTED!");
+
+                Debug.Log("Collected EXP: " + expValue);
             }
 
             Destroy(gameObject);

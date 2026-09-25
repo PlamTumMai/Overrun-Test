@@ -2,14 +2,21 @@ using UnityEngine;
 
 public class EnemyCrawler : MonoBehaviour
 {
-    public int enemyLevel = 1;
     public float moveSpeed = 2f;
 
     public int maxHP = 20;
     public int currentHP;
 
     public int damage = 10;
+    public int enemyLevel = 1;
+
+    // EXP
     public GameObject expPrefab;
+
+    // โอกาสและค่า EXP
+    // 65% ไม่ดรอป
+    // 25% EXP ปกติ
+    // 10% EXP ใหญ่
 
     private Transform player;
 
@@ -17,7 +24,8 @@ public class EnemyCrawler : MonoBehaviour
     {
         currentHP = maxHP;
 
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        GameObject playerObject =
+            GameObject.FindGameObjectWithTag("Player");
 
         if (playerObject != null)
         {
@@ -30,9 +38,11 @@ public class EnemyCrawler : MonoBehaviour
         if (player == null)
             return;
 
-        Vector3 direction = (player.position - transform.position).normalized;
+        Vector3 direction =
+            (player.position - transform.position).normalized;
 
-        transform.position += direction * moveSpeed * Time.deltaTime;
+        transform.position +=
+            direction * moveSpeed * Time.deltaTime;
     }
 
     public void TakeDamage(int damageAmount)
@@ -53,11 +63,54 @@ public class EnemyCrawler : MonoBehaviour
 
         if (expPrefab != null)
         {
-            Instantiate(
-                expPrefab,
-                transform.position,
-                Quaternion.identity
-            );
+            float chance = Random.value;
+
+            int randomEXP = 0;
+            bool isBigEXP = false;
+
+            // 65% ไม่ดรอป
+            if (chance < 0.65f)
+            {
+                Debug.Log("No EXP");
+            }
+
+            // 25% EXP ปกติ
+            else if (chance < 0.90f)
+            {
+                randomEXP = Random.Range(2, 5);
+                isBigEXP = false;
+            }
+
+            // 10% EXP ใหญ่
+            else
+            {
+                randomEXP = Random.Range(6, 11);
+                isBigEXP = true;
+            }
+
+            // ถ้ามี EXP ให้สร้าง EXP Orb
+            if (randomEXP > 0)
+            {
+                GameObject expObject = Instantiate(
+                    expPrefab,
+                    transform.position,
+                    Quaternion.identity
+                );
+
+                EXPOrb expOrb =
+                    expObject.GetComponent<EXPOrb>();
+
+                if (expOrb != null)
+                {
+                    expOrb.expValue = randomEXP;
+                    expOrb.isBigEXP = isBigEXP;
+                }
+
+                Debug.Log(
+                    "Dropped EXP: " + randomEXP +
+                    " | Big EXP: " + isBigEXP
+                );
+            }
         }
 
         Destroy(gameObject);

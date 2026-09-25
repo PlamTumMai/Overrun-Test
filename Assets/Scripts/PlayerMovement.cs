@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -8,13 +9,18 @@ public class PlayerMovement : MonoBehaviour
     public int maxHP = 100;
     public int currentHP;
 
+    public Slider hpBar;
+
     private Rigidbody2D rb;
     private Vector2 moveInput;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
         currentHP = maxHP;
+
+        UpdateHPBar();
     }
 
     void Update()
@@ -45,7 +51,12 @@ public class PlayerMovement : MonoBehaviour
     {
         currentHP -= damage;
 
+        if (currentHP < 0)
+            currentHP = 0;
+
         Debug.Log("Player HP: " + currentHP);
+
+        UpdateHPBar();
 
         if (currentHP <= 0)
         {
@@ -53,8 +64,29 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    void UpdateHPBar()
+    {
+        if (hpBar != null)
+        {
+            hpBar.maxValue = maxHP;
+            hpBar.value = currentHP;
+        }
+    }
+
     void Die()
     {
         Debug.Log("PLAYER DEAD");
+
+        rb.linearVelocity = Vector2.zero;
+
+        GameOverManager gameOverManager =
+            FindObjectOfType<GameOverManager>();
+
+        if (gameOverManager != null)
+        {
+            gameOverManager.GameOver();
+        }
+
+        gameObject.SetActive(false);
     }
 }

@@ -4,11 +4,15 @@ public class PlayerWeapon : MonoBehaviour
 {
     public GameObject energyOrbPrefab;
 
-    public float attackCooldown = 1f;
+    public float attackCooldown = 1.5f;
     public float attackRange = 10f;
 
-    private float attackTimer = 0f;
     public int damageBonus = 0;
+
+    // จำนวนกระสุนที่ยิงต่อครั้ง
+    public int projectileCount = 1;
+
+    private float attackTimer = 0f;
 
     void Update()
     {
@@ -16,21 +20,19 @@ public class PlayerWeapon : MonoBehaviour
 
         if (attackTimer <= 0f)
         {
-            Transform target = FindNearestEnemy();
-
-            if (target != null)
-            {
-                Shoot(target);
-                attackTimer = attackCooldown;
-            }
+            ShootMultiple();
+            attackTimer = attackCooldown;
         }
     }
 
-    Transform FindNearestEnemy()
+    void ShootMultiple()
     {
         EnemyCrawler[] enemies = FindObjectsOfType<EnemyCrawler>();
 
-        Transform nearestEnemy = null;
+        if (enemies.Length == 0)
+            return;
+
+        EnemyCrawler nearestEnemy = null;
         float nearestDistance = Mathf.Infinity;
 
         foreach (EnemyCrawler enemy in enemies)
@@ -44,28 +46,36 @@ public class PlayerWeapon : MonoBehaviour
                 distance <= attackRange)
             {
                 nearestDistance = distance;
-                nearestEnemy = enemy.transform;
+                nearestEnemy = enemy;
             }
         }
 
-        return nearestEnemy;
-    }
+        if (nearestEnemy == null)
+            return;
 
-    void Shoot(Transform target)
-    {
-        GameObject orb = Instantiate(
-            energyOrbPrefab,
-            transform.position,
-            Quaternion.identity
-        );
-
-        EnergyOrb energyOrb = orb.GetComponent<EnergyOrb>();
-
-        if (energyOrb != null)
+        // ยิงหลายลูก
+        for (int i = 0; i < projectileCount; i++)
         {
-            energyOrb.damage += damageBonus;
-            energyOrb.SetTarget(target);
+            GameObject orb = Instantiate(
+                energyOrbPrefab,
+                transform.position,
+                Quaternion.identity
+            );
+
+            EnergyOrb energyOrb =
+                orb.GetComponent<EnergyOrb>();
+
+            if (energyOrb != null)
+            {
+                energyOrb.damage += damageBonus;
+
+                // กระจายเป้าหมายเล็กน้อย
+                EnemyCrawler target = enemies[
+                    Random.Range(0, enemies.Length)
+                ];
+
+                energyOrb.SetTarget(target.transform);
+            }
         }
     }
-
 }
