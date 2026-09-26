@@ -45,6 +45,13 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         rb.linearVelocity = moveInput * moveSpeed;
+
+        Vector3 position = transform.position;
+
+        position.x = Mathf.Clamp(position.x, -8.5f, 8.5f);
+        position.y = Mathf.Clamp(position.y, -4.5f, 4.5f);
+
+        transform.position = position;
     }
 
     public void TakeDamage(int damage)
@@ -64,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void UpdateHPBar()
+    public void UpdateHPBar()
     {
         if (hpBar != null)
         {

@@ -5,7 +5,7 @@ public class PlayerWeapon : MonoBehaviour
     public GameObject energyOrbPrefab;
 
     public float attackCooldown = 1.5f;
-    public float attackRange = 10f;
+    public float attackRange = 20f;
 
     public int damageBonus = 0;
 

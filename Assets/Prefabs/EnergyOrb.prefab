@@ -171,4 +171,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnergyOrb
   speed: 8
-  damage: 10
+  damage: 20
