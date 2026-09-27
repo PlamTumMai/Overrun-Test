@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnergyOrb : MonoBehaviour
 {
     public float speed = 8f;
-    public int damage = 10;
+    public int damage = 20;
 
     private Transform target;
 
