@@ -10,6 +10,13 @@ public class EnemyCrawler : MonoBehaviour
     public int damage = 10;
     public int enemyLevel = 1;
 
+    public SpriteRenderer spriteRenderer;
+
+    void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
     // EXP
     public GameObject expPrefab;
 
@@ -43,6 +50,15 @@ public class EnemyCrawler : MonoBehaviour
 
         transform.position +=
             direction * moveSpeed * Time.deltaTime;
+
+        if (direction.x > 0)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else if (direction.x < 0)
+        {
+            spriteRenderer.flipX = false;
+        }
     }
 
     public void TakeDamage(int damageAmount)

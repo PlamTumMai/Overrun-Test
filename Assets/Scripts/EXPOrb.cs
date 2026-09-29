@@ -18,11 +18,11 @@ public class EXPOrb : MonoBehaviour
         // ขนาด EXP
         if (isBigEXP)
         {
-            transform.localScale = Vector3.one * 0.5f;
+            transform.localScale = Vector3.one * 2.0f;
         }
         else
         {
-            transform.localScale = Vector3.one * 0.3f;
+            transform.localScale = Vector3.one * 1.0f;
         }
     }
 
