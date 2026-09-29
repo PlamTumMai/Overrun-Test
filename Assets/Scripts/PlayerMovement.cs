@@ -14,6 +14,15 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 moveInput;
 
+    public Animator animator;
+    public SpriteRenderer spriteRenderer;
+
+    void Awake()
+{
+    spriteRenderer = GetComponent<SpriteRenderer>();
+}
+    
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -40,6 +49,17 @@ public class PlayerMovement : MonoBehaviour
             moveInput.x += 1;
 
         moveInput = moveInput.normalized;
+
+        animator.SetBool("IsPlayerRun", moveInput != Vector2.zero);
+            if (moveInput.x > 0)
+            {
+                spriteRenderer.flipX = false;
+            }
+            else if (moveInput.x < 0)
+            {
+                spriteRenderer.flipX = true;
+            }
+        
     }
 
     void FixedUpdate()
