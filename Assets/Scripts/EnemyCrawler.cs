@@ -53,11 +53,11 @@ public class EnemyCrawler : MonoBehaviour
 
         if (direction.x > 0)
         {
-            spriteRenderer.flipX = true;
+            spriteRenderer.flipX = false;
         }
         else if (direction.x < 0)
         {
-            spriteRenderer.flipX = false;
+            spriteRenderer.flipX = true;
         }
     }
 
