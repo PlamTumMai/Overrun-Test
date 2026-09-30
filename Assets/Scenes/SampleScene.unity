@@ -461,7 +461,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 13.5}
+  m_AnchoredPosition: {x: 0, y: 17.078}
   m_SizeDelta: {x: -554.67, y: 34.1556}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &245627778
@@ -1911,7 +1911,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 161.5, y: 436}
+  m_AnchoredPosition: {x: 108, y: 372}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &886073157
@@ -2295,7 +2295,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 245, y: -118.22}
+  m_AnchoredPosition: {x: 825, y: -57.24}
   m_SizeDelta: {x: 158.62512, y: 43.565002}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1307264604
@@ -2509,7 +2509,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300, y: -64.74}
+  m_AnchoredPosition: {x: 262, y: -97}
   m_SizeDelta: {x: 291.682, y: 49.481018}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1346348538
@@ -2946,7 +2946,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 90, y: -90}
+  m_AnchoredPosition: {x: 50, y: -90}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1628740945
@@ -3225,12 +3225,9 @@ RectTransform:
   - {fileID: 742686583}
   - {fileID: 1346348537}
   - {fileID: 840337701}
-<<<<<<< HEAD
   - {fileID: 701300361}
   - {fileID: 886073156}
-=======
   - {fileID: 1628740944}
->>>>>>> 4a2f5f36d5ad9fc82b4d517f1d18b4e6ecf9081b
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3589,8 +3586,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   crawlerPrefab: {fileID: 1541950479634007920, guid: 4979290473041ac4a9f5297637c5e197, type: 3}
   player: {fileID: 302123590}
+  playerEXP: {fileID: 0}
   spawnInterval: 0.5
   spawnDistance: 8
+  currentWave: 1
 --- !u!4 &2079049514
 Transform:
   m_ObjectHideFlags: 0
