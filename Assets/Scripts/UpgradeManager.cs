@@ -7,23 +7,25 @@ public class UpgradeManager : MonoBehaviour
     public PlayerMovement playerMovement;
     public PlayerWeapon playerWeapon;
 
-    public void UpgradeMaxHP()
+    // =========================
+    // DAMAGE +20
+    // =========================
+
+    public void UpgradeDamage()
     {
-        playerMovement.maxHP += 20;
-        playerMovement.currentHP += 20;
+        playerWeapon.damageBonus += 20;
 
-        if (playerMovement.currentHP > playerMovement.maxHP)
-        {
-            playerMovement.currentHP = playerMovement.maxHP;
-        }
-
-        // อัปเดต HP Bar
-        playerMovement.UpdateHPBar();
-
-        Debug.Log("Upgrade: MAX HP +20");
+        Debug.Log(
+            "Upgrade: DAMAGE +20 | Current Bonus: "
+            + playerWeapon.damageBonus
+        );
 
         ContinueGame();
     }
+
+    // =========================
+    // PROJECTILE +1
+    // =========================
 
     public void UpgradeProjectile()
     {
@@ -37,14 +39,25 @@ public class UpgradeManager : MonoBehaviour
         ContinueGame();
     }
 
+    // =========================
+    // MOVE SPEED +1
+    // =========================
+
     public void UpgradeMoveSpeed()
     {
         playerMovement.moveSpeed += 1f;
 
-        Debug.Log("Upgrade: MOVE SPEED +1");
+        Debug.Log(
+            "Upgrade: MOVE SPEED +1 | Current: "
+            + playerMovement.moveSpeed
+        );
 
         ContinueGame();
     }
+
+    // =========================
+    // CONTINUE
+    // =========================
 
     void ContinueGame()
     {

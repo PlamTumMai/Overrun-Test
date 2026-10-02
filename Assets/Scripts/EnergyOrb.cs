@@ -5,30 +5,27 @@ public class EnergyOrb : MonoBehaviour
     public float speed = 8f;
     public int damage = 20;
 
-    private Transform target;
+    private Vector2 direction;
 
-    public void SetTarget(Transform newTarget)
+    public void SetDirection(Vector2 newDirection)
     {
-        target = newTarget;
+        direction = newDirection.normalized;
     }
 
     void Update()
     {
-        if (target == null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Vector3 direction =
-            (target.position - transform.position).normalized;
-
-        transform.position += direction * speed * Time.deltaTime;
+        transform.position +=
+            (Vector3)direction *
+            speed *
+            Time.deltaTime;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(
+        Collider2D collision
+    )
     {
-        EnemyCrawler enemy = collision.GetComponent<EnemyCrawler>();
+        EnemyCrawler enemy =
+            collision.GetComponent<EnemyCrawler>();
 
         if (enemy != null)
         {

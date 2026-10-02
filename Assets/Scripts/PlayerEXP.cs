@@ -12,6 +12,9 @@ public class PlayerEXP : MonoBehaviour
     public TMP_Text levelText;
     public GameObject upgradePanel;
 
+    public AudioSource audioSource;
+    public AudioClip expSound;
+
     void Start()
     {
         Time.timeScale = 1f;
@@ -27,6 +30,11 @@ public class PlayerEXP : MonoBehaviour
     public void AddEXP(int amount)
     {
         currentEXP += amount;
+
+        if (audioSource != null && expSound != null)
+        {
+            audioSource.PlayOneShot(expSound);
+        }
 
         if (currentEXP >= requiredEXP)
         {
@@ -45,9 +53,44 @@ public class PlayerEXP : MonoBehaviour
 
         Debug.Log("LEVEL UP! Level " + level);
 
+        // =========================
+        // HEAL 50% MAX HP
+        // =========================
+
+        PlayerMovement playerMovement =
+            GetComponent<PlayerMovement>();
+
+        if (playerMovement != null)
+        {
+            int healAmount =
+                Mathf.RoundToInt(playerMovement.maxHP * 0.5f);
+
+            playerMovement.currentHP += healAmount;
+
+            // HP ห้ามเกิน Max HP
+            if (playerMovement.currentHP > playerMovement.maxHP)
+            {
+                playerMovement.currentHP =
+                    playerMovement.maxHP;
+            }
+
+            playerMovement.UpdateHPBar();
+
+            Debug.Log(
+                "LEVEL UP HEAL +" + healAmount +
+                " | HP: " +
+                playerMovement.currentHP +
+                "/" +
+                playerMovement.maxHP
+            );
+        }
+
         UpdateUI();
 
-        // หยุดเกม
+        // =========================
+        // PAUSE GAME
+        // =========================
+
         Time.timeScale = 0f;
 
         // เปิด Upgrade Panel

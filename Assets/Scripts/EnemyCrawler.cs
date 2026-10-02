@@ -12,20 +12,15 @@ public class EnemyCrawler : MonoBehaviour
 
     public SpriteRenderer spriteRenderer;
 
+    // EXP
+    public GameObject expPrefab;
+
+    private Transform player;
+
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
-
-    // EXP
-    public GameObject expPrefab;
-
-    // โอกาสและค่า EXP
-    // 65% ไม่ดรอป
-    // 25% EXP ปกติ
-    // 10% EXP ใหญ่
-
-    private Transform player;
 
     void Start()
     {
@@ -76,6 +71,22 @@ public class EnemyCrawler : MonoBehaviour
     void Die()
     {
         Debug.Log("Crawler Died!");
+
+        // =========================
+        // ADD SCORE
+        // =========================
+
+        GameOverManager gameOverManager =
+            FindObjectOfType<GameOverManager>();
+
+        if (gameOverManager != null)
+        {
+            gameOverManager.AddKill();
+        }
+
+        // =========================
+        // EXP DROP
+        // =========================
 
         if (expPrefab != null)
         {

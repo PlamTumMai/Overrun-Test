@@ -6,188 +6,313 @@ public class EnemySpawner : MonoBehaviour
     public GameObject crawlerPrefab;
     public Transform player;
 
-    public float spawnInterval = 0.5f;
+    // PlayerEXP ของตัว Player
+    public PlayerEXP playerEXP;
+
+    // =========================
+    // SPAWN
+    // =========================
+
+    public float spawnInterval = 1f;
     public float spawnDistance = 8f;
 
     private float spawnTimer;
     private float gameTime;
 
-    private int currentWave = 1;
+    // =========================
+    // WAVE
+    // =========================
+
+    public int currentWave = 1;
+
     private bool changingWave = false;
 
     void Start()
     {
         spawnTimer = 0f;
         gameTime = 0f;
+        currentWave = 1;
+
+        // ถ้าไม่ได้ลาก PlayerEXP มาใน Inspector
+        if (playerEXP == null)
+        {
+            playerEXP =
+                FindFirstObjectByType<PlayerEXP>();
+        }
     }
 
     void Update()
     {
-        // ถ้ากำลังเปลี่ยน Wave ห้าม Spawn
         if (changingWave)
             return;
 
         gameTime += Time.deltaTime;
 
-        // เปลี่ยน Wave ทุก 60 วิ
-        if (currentWave == 1 && gameTime >= 60f)
+        // =========================
+        // WAVE ทุก 30 วินาที
+        // =========================
+
+        if (gameTime >= currentWave * 30f)
         {
-            StartCoroutine(ChangeToWave2());
+            StartCoroutine(ChangeWave());
             return;
         }
 
-        if (currentWave == 2 && gameTime >= 120f)
-        {
-            StartCoroutine(ChangeToWave3());
-            return;
-        }
+        // =========================
+        // SPAWN
+        // =========================
 
         spawnTimer -= Time.deltaTime;
 
         if (spawnTimer <= 0f)
         {
+            SpawnEnemies();
+
+            spawnTimer = GetSpawnInterval();
+        }
+    }
+
+    // =========================
+    // CHANGE WAVE
+    // =========================
+
+    IEnumerator ChangeWave()
+    {
+        changingWave = true;
+
+        Debug.Log(
+            "WAVE " + currentWave +
+            " COMPLETE!"
+        );
+
+        ClearStage();
+
+        yield return new WaitForSecondsRealtime(2f);
+
+        currentWave++;
+
+        spawnTimer = 1f;
+
+        changingWave = false;
+
+        Debug.Log(
+            "WAVE " + currentWave +
+            " START!"
+        );
+    }
+
+    // =========================
+    // SPAWN ENEMIES
+    // =========================
+
+    void SpawnEnemies()
+    {
+        if (player == null ||
+            crawlerPrefab == null)
+        {
+            return;
+        }
+
+        // Wave 1 = 1 ตัว
+        // Wave 2 = 2 ตัว
+        // Wave 3 = 3 ตัว
+        // เป็นต้น
+
+        int enemyCount = currentWave;
+
+        // สูงสุด 6 ตัวต่อรอบ
+        enemyCount = Mathf.Min(
+            enemyCount,
+            6
+        );
+
+        for (int i = 0; i < enemyCount; i++)
+        {
             SpawnCrawler();
-
-            if (currentWave == 1)
-            {
-                spawnInterval = 0.5f;
-            }
-            else if (currentWave == 2)
-            {
-                spawnInterval = 0.35f;
-            }
-            else
-            {
-                spawnInterval = 0.25f;
-            }
-
-            spawnTimer = spawnInterval;
         }
     }
 
-    IEnumerator ChangeToWave2()
-    {
-        changingWave = true;
-
-        Debug.Log("WAVE 1 COMPLETE!");
-
-        // ล้างทุกอย่าง
-        ClearStage();
-
-        // รอให้สนามโล่ง
-        yield return new WaitForSecondsRealtime(2f);
-
-        currentWave = 2;
-
-        // เริ่มนับเวลาต่อ
-        spawnTimer = 1f;
-
-        changingWave = false;
-
-        Debug.Log("WAVE 2 START!");
-    }
-
-    IEnumerator ChangeToWave3()
-    {
-        changingWave = true;
-
-        Debug.Log("WAVE 2 COMPLETE!");
-
-        ClearStage();
-
-        yield return new WaitForSecondsRealtime(2f);
-
-        currentWave = 3;
-
-        spawnTimer = 1f;
-
-        changingWave = false;
-
-        Debug.Log("WAVE 3 START!");
-    }
-
-    void ClearStage()
-    {
-        // ลบ Crawler
-        EnemyCrawler[] enemies =
-            FindObjectsOfType<EnemyCrawler>();
-
-        foreach (EnemyCrawler enemy in enemies)
-        {
-            Destroy(enemy.gameObject);
-        }
-
-        // ลบ EXP
-        EXPOrb[] expOrbs =
-            FindObjectsOfType<EXPOrb>();
-
-        foreach (EXPOrb exp in expOrbs)
-        {
-            Destroy(exp.gameObject);
-        }
-
-        // ลบ Energy Orb
-        EnergyOrb[] energyOrbs =
-            FindObjectsOfType<EnergyOrb>();
-
-        foreach (EnergyOrb orb in energyOrbs)
-        {
-            Destroy(orb.gameObject);
-        }
-
-        Debug.Log("STAGE CLEARED!");
-    }
+    // =========================
+    // SPAWN CRAWLER
+    // =========================
 
     void SpawnCrawler()
     {
-        if (player == null || crawlerPrefab == null)
-            return;
+        Vector2 spawnPosition =
+            GetSpawnPosition();
 
-        Vector2 spawnPosition = GetSpawnPosition();
-
-        GameObject crawlerObject = Instantiate(
-            crawlerPrefab,
-            spawnPosition,
-            Quaternion.identity
-        );
+        GameObject crawlerObject =
+            Instantiate(
+                crawlerPrefab,
+                spawnPosition,
+                Quaternion.identity
+            );
 
         EnemyCrawler crawler =
             crawlerObject.GetComponent<EnemyCrawler>();
 
         if (crawler != null)
         {
-            if (currentWave == 1)
-            {
-                crawler.enemyLevel = 1;
-                crawler.maxHP = 20;
-                crawler.damage = 10;
-                crawler.moveSpeed = 2f;
-            }
-            else if (currentWave == 2)
-            {
-                crawler.enemyLevel = 2;
-                crawler.maxHP = 30;
-                crawler.damage = 12;
-                crawler.moveSpeed = 2.2f;
-            }
-            else
-            {
-                crawler.enemyLevel = 3;
-                crawler.maxHP = 45;
-                crawler.damage = 15;
-                crawler.moveSpeed = 2.5f;
-            }
-
-            crawler.currentHP = crawler.maxHP;
+            SetEnemyStats(crawler);
         }
     }
+
+    // =========================
+    // ENEMY STATS
+    // =========================
+
+    void SetEnemyStats(
+        EnemyCrawler crawler
+    )
+    {
+        // =========================
+        // HP
+        // ทุก 30 วิ × 1.25
+        // =========================
+
+        float hpMultiplier =
+            Mathf.Pow(
+                1.25f,
+                currentWave - 1
+            );
+
+        crawler.maxHP =
+            Mathf.RoundToInt(
+                20 * hpMultiplier
+            );
+
+        crawler.currentHP =
+            crawler.maxHP;
+
+        // =========================
+        // DAMAGE
+        // =========================
+
+        crawler.damage =
+            10 +
+            ((currentWave - 1) * 2);
+
+        // =========================
+        // MOVE SPEED
+        // ใช้ PLAYER LEVEL
+        // =========================
+
+        int playerLevel = 1;
+
+        if (playerEXP != null)
+        {
+            playerLevel =
+                playerEXP.level;
+        }
+
+        // Level 1 = 3.0
+        // Level 2 = 3.5
+        // Level 3+ = 4.0
+
+        if (playerLevel == 1)
+        {
+            crawler.moveSpeed = 3.0f;
+        }
+        else if (playerLevel == 2)
+        {
+            crawler.moveSpeed = 3.5f;
+        }
+        else
+        {
+            crawler.moveSpeed = 4.0f;
+        }
+
+        crawler.enemyLevel =
+            currentWave;
+
+        Debug.Log(
+            "Enemy Spawned | " +
+            "Wave: " + currentWave +
+            " | Player Level: " + playerLevel +
+            " | HP: " + crawler.maxHP +
+            " | Damage: " + crawler.damage +
+            " | Speed: " + crawler.moveSpeed
+        );
+    }
+
+    // =========================
+    // SPAWN INTERVAL
+    // =========================
+
+    float GetSpawnInterval()
+    {
+        // Wave สูงขึ้น
+        // Spawn เร็วขึ้น
+
+        float interval =
+            1f -
+            ((currentWave - 1) * 0.1f);
+
+        // เร็วสุด 0.3 วิ
+        return Mathf.Max(
+            interval,
+            0.3f
+        );
+    }
+
+    // =========================
+    // CLEAR STAGE
+    // =========================
+
+    void ClearStage()
+    {
+        // Enemy
+        EnemyCrawler[] enemies =
+            FindObjectsOfType<EnemyCrawler>();
+
+        foreach (
+            EnemyCrawler enemy
+            in enemies
+        )
+        {
+            Destroy(enemy.gameObject);
+        }
+
+        // EXP
+        EXPOrb[] expOrbs =
+            FindObjectsOfType<EXPOrb>();
+
+        foreach (
+            EXPOrb exp
+            in expOrbs
+        )
+        {
+            Destroy(exp.gameObject);
+        }
+
+        // Energy Orb
+        EnergyOrb[] energyOrbs =
+            FindObjectsOfType<EnergyOrb>();
+
+        foreach (
+            EnergyOrb orb
+            in energyOrbs
+        )
+        {
+            Destroy(orb.gameObject);
+        }
+
+        Debug.Log(
+            "STAGE CLEARED!"
+        );
+    }
+
+    // =========================
+    // GET SPAWN POSITION
+    // =========================
 
     Vector2 GetSpawnPosition()
     {
         Vector2 direction =
             Random.insideUnitCircle.normalized;
 
-        return (Vector2)player.position
-            + direction * spawnDistance;
+        return (Vector2)player.position +
+               direction *
+               spawnDistance;
     }
 }
