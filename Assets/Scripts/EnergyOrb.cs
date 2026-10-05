@@ -15,9 +15,21 @@ public class EnergyOrb : MonoBehaviour
     void Update()
     {
         transform.position +=
-            (Vector3)direction *
-            speed *
-            Time.deltaTime;
+            (Vector3)(direction * speed * Time.deltaTime);
+
+        // ทำลายตัวเองเมื่อออกนอกจอ
+        Vector3 viewport =
+            Camera.main.WorldToViewportPoint(
+                transform.position
+            );
+
+        if (viewport.x < -0.1f ||
+            viewport.x > 1.1f ||
+            viewport.y < -0.1f ||
+            viewport.y > 1.1f)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnTriggerEnter2D(
@@ -29,9 +41,8 @@ public class EnergyOrb : MonoBehaviour
 
         if (enemy != null)
         {
+            // ทำ Damage แต่ไม่ทำลายกระสุน
             enemy.TakeDamage(damage);
-
-            Destroy(gameObject);
         }
     }
 }

@@ -118,18 +118,12 @@ public class EnemySpawner : MonoBehaviour
         // Wave 3 = 3 ตัว
         // เป็นต้น
 
-        int enemyCount = currentWave;
-
-        // สูงสุด 6 ตัวต่อรอบ
-        enemyCount = Mathf.Min(
-            enemyCount,
-            6
-        );
-
+        int enemyCount =
+            Mathf.Min(currentWave + 2,6);
         for (int i = 0; i < enemyCount; i++)
         {
             SpawnCrawler();
-        }
+        }   
     }
 
     // =========================

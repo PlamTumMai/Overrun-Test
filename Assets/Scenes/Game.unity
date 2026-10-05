@@ -631,7 +631,7 @@ MonoBehaviour:
   damageSound: {fileID: 8300000, guid: 7b10f07809deed44cbb30e4cbcebe5a0, type: 3}
   dashSpeed: 15
   dashDuration: 0.2
-  dashCooldown: 5
+  dashCooldown: 1
   dashBar: {fileID: 745925639}
 --- !u!61 &302123587
 BoxCollider2D:
