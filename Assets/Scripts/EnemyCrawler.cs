@@ -15,6 +15,10 @@ public class EnemyCrawler : MonoBehaviour
     // EXP
     public GameObject expPrefab;
 
+    // HP BOX
+    public GameObject hpBoxPrefab;
+    public float hpBoxDropChance = 0.01f;
+
     private Transform player;
 
     void Awake()
@@ -68,80 +72,100 @@ public class EnemyCrawler : MonoBehaviour
         }
     }
 
-    void Die()
+void Die()
+{
+    Debug.Log("Crawler Died!");
+
+    // =========================
+    // ADD SCORE
+    // =========================
+
+    GameOverManager gameOverManager =
+        FindObjectOfType<GameOverManager>();
+
+    if (gameOverManager != null)
     {
-        Debug.Log("Crawler Died!");
-
-        // =========================
-        // ADD SCORE
-        // =========================
-
-        GameOverManager gameOverManager =
-            FindObjectOfType<GameOverManager>();
-
-        if (gameOverManager != null)
-        {
-            gameOverManager.AddKill();
-        }
-
-        // =========================
-        // EXP DROP
-        // =========================
-
-        if (expPrefab != null)
-        {
-            float chance = Random.value;
-
-            int randomEXP = 0;
-            bool isBigEXP = false;
-
-            // 65% ไม่ดรอป
-            if (chance < 0.65f)
-            {
-                Debug.Log("No EXP");
-            }
-
-            // 25% EXP ปกติ
-            else if (chance < 0.90f)
-            {
-                randomEXP = Random.Range(2, 5);
-                isBigEXP = false;
-            }
-
-            // 10% EXP ใหญ่
-            else
-            {
-                randomEXP = Random.Range(6, 11);
-                isBigEXP = true;
-            }
-
-            // ถ้ามี EXP ให้สร้าง EXP Orb
-            if (randomEXP > 0)
-            {
-                GameObject expObject = Instantiate(
-                    expPrefab,
-                    transform.position,
-                    Quaternion.identity
-                );
-
-                EXPOrb expOrb =
-                    expObject.GetComponent<EXPOrb>();
-
-                if (expOrb != null)
-                {
-                    expOrb.expValue = randomEXP;
-                    expOrb.isBigEXP = isBigEXP;
-                }
-
-                Debug.Log(
-                    "Dropped EXP: " + randomEXP +
-                    " | Big EXP: " + isBigEXP
-                );
-            }
-        }
-
-        Destroy(gameObject);
+        gameOverManager.AddKill();
     }
+
+    // =========================
+    // EXP DROP
+    // =========================
+
+    int randomEXP = 0;
+    bool isBigEXP = false;
+
+    if (expPrefab != null)
+    {
+        float chance = Random.value;
+
+        // 65% ไม่ดรอป
+        if (chance < 0.65f)
+        {
+            Debug.Log("No EXP");
+        }
+
+        // 25% EXP ปกติ
+        else if (chance < 0.90f)
+        {
+            randomEXP = Random.Range(2, 5);
+            isBigEXP = false;
+        }
+
+        // 10% EXP ใหญ่
+        else
+        {
+            randomEXP = Random.Range(6, 11);
+            isBigEXP = true;
+        }
+
+        if (randomEXP > 0)
+        {
+            GameObject expObject = Instantiate(
+                expPrefab,
+                transform.position,
+                Quaternion.identity
+            );
+
+            EXPOrb expOrb =
+                expObject.GetComponent<EXPOrb>();
+
+            if (expOrb != null)
+            {
+                expOrb.expValue = randomEXP;
+                expOrb.isBigEXP = isBigEXP;
+            }
+
+            Debug.Log(
+                "Dropped EXP: " + randomEXP +
+                " | Big EXP: " + isBigEXP
+            );
+        }
+    }
+
+    // =========================
+    // HP BOX DROP
+    // =========================
+
+    // จะสุ่ม HP Box เฉพาะกรณีที่ไม่ได้ EXP
+    if (hpBoxPrefab != null && randomEXP <= 0)
+    {
+        float chance = Random.value;
+
+        if (chance < hpBoxDropChance)
+        {
+            Instantiate(
+                hpBoxPrefab,
+                transform.position,
+                Quaternion.identity
+            );
+
+            Debug.Log("Dropped HP BOX!");
+        }
+    }
+
+    Destroy(gameObject);
+}
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

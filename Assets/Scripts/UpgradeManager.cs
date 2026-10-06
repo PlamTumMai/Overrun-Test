@@ -8,16 +8,28 @@ public class UpgradeManager : MonoBehaviour
     public PlayerWeapon playerWeapon;
 
     // =========================
-    // DAMAGE +20
+    // HP +20
     // =========================
 
-    public void UpgradeDamage()
+    public void UpgradeHP()
     {
-        playerWeapon.damageBonus += 20;
+        playerMovement.maxHP += 20;
+        playerMovement.currentHP += 20;
+
+        if (playerMovement.currentHP >
+            playerMovement.maxHP)
+        {
+            playerMovement.currentHP =
+                playerMovement.maxHP;
+        }
+
+        playerMovement.UpdateHPBar();
 
         Debug.Log(
-            "Upgrade: DAMAGE +20 | Current Bonus: "
-            + playerWeapon.damageBonus
+            "Upgrade: HP +20 | Max HP: "
+            + playerMovement.maxHP +
+            " | Current HP: "
+            + playerMovement.currentHP
         );
 
         ContinueGame();

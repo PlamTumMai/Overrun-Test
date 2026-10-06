@@ -184,7 +184,7 @@ public class EnemySpawner : MonoBehaviour
 
         crawler.damage =
             10 +
-            ((currentWave - 1) * 2);
+            ((currentWave - 1) * 3);
 
         // =========================
         // MOVE SPEED
@@ -265,18 +265,6 @@ public class EnemySpawner : MonoBehaviour
         )
         {
             Destroy(enemy.gameObject);
-        }
-
-        // EXP
-        EXPOrb[] expOrbs =
-            FindObjectsOfType<EXPOrb>();
-
-        foreach (
-            EXPOrb exp
-            in expOrbs
-        )
-        {
-            Destroy(exp.gameObject);
         }
 
         // Energy Orb

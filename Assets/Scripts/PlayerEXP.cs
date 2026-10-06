@@ -53,38 +53,6 @@ public class PlayerEXP : MonoBehaviour
 
         Debug.Log("LEVEL UP! Level " + level);
 
-        // =========================
-        // HEAL 50% MAX HP
-        // =========================
-
-        PlayerMovement playerMovement =
-            GetComponent<PlayerMovement>();
-
-        if (playerMovement != null)
-        {
-            int healAmount =
-                Mathf.RoundToInt(playerMovement.maxHP * 0.5f);
-
-            playerMovement.currentHP += healAmount;
-
-            // HP ห้ามเกิน Max HP
-            if (playerMovement.currentHP > playerMovement.maxHP)
-            {
-                playerMovement.currentHP =
-                    playerMovement.maxHP;
-            }
-
-            playerMovement.UpdateHPBar();
-
-            Debug.Log(
-                "LEVEL UP HEAL +" + healAmount +
-                " | HP: " +
-                playerMovement.currentHP +
-                "/" +
-                playerMovement.maxHP
-            );
-        }
-
         UpdateUI();
 
         // =========================
